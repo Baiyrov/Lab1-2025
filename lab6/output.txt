@@ -1,0 +1,9 @@
+Python
+is
+fun!
+Write
+this
+list
+to
+a
+file.
