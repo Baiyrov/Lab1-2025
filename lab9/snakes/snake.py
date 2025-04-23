@@ -81,11 +81,23 @@ class Snake:
             food.move(self)
             score += food.cost
             channel_eating.play(sound_eating) 
+        
 
             if score % 5 == 0:
                 FPS += 0.5
                 lvl += 1
+    def check_collision(self, foood):
+        global score, FPS, lvl 
+        if self.body[0] == foood.pos: # Eat food
+            self.body.append(Point(self.body[-1].x, self.body[-1].y))  # increase the body
+            foood.move(self)
+            score += foood.cost
+            channel_eating.play(sound_eating) 
+        
 
+            if score % 5 == 0:
+                FPS += 0.5
+                lvl += 1
 # Food class
 class Food:
     def __init__(self):
@@ -108,6 +120,26 @@ class Food:
     def draw(self):
         pygame.draw.rect(screen, colorGREEN, (self.pos.x * CELL, self.pos.y * CELL, CELL, CELL))
 
+
+class Foood:
+    def __init__(self):
+        
+        self.move(snake=None)
+
+    def move(self, snake):
+        while True:
+            self.x = random.randrange(0, WIDTH // CELL)  
+            self.y = random.randrange(0, HEIGHT // CELL)  
+            self.pos = Point(self.x, self.y)
+            self.cost = random.randrange(1,4)
+            
+
+            # Check that food does not appear in the snake's body
+            
+
+    def draw(self):
+        pygame.draw.rect(screen, colorGREEN, (self.pos.x * CELL, self.pos.y * CELL, CELL, CELL))
+
 # Game settings
 FPS = FPS_START
 score = 0
@@ -117,11 +149,12 @@ clock = pygame.time.Clock()
 # Create snake and food
 snake = Snake()
 food = Food()
+foood = Foood()
 running = True
 
 while running:
     if not game_over:
-        if pygame.time.get_ticks() - food.last_spawn_time > 10000:
+        if pygame.time.get_ticks() - food.last_spawn_time > 100:
             food.move(snake)
 
         draw_grid_chess()
@@ -135,6 +168,15 @@ while running:
         text = font_score.render(f" Score: {score} ", True, (0, 0, 0))
         font_score_rect = text.get_rect()
         screen.blit(text, (WIDTH - font_score_rect.w, 10))
+
+        
+        draw_grid_chess()
+        game_over = snake.move()
+        snake.check_collision(foood)
+        snake.draw()
+        foood.draw()
+
+        
 
         # Display Level
         font_speed = pygame.font.Font(None, 36)
@@ -171,6 +213,7 @@ while running:
                     # Recreate the snake and food
                     snake = Snake()
                     food = Food()  # Create new food (resets last_spawn_time)
+                    foood = Foood()
                 snake.body = [Point(10, 11), Point(10, 12), Point(10, 13)]
                 snake.dx, snake.dy= 0, -1
 

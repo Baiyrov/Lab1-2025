@@ -1,15 +1,15 @@
 import pygame
 import random
 
-# Инициализация Pygame
+
 pygame.init()
 
-# Константы
+
 w, h = 400, 600
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
-# Загрузка ресурсов
+
 player_img = pygame.image.load(r"lab8/racer/Player.png")
 enemy_img = pygame.image.load(r"lab8/racer/Enemy.png")
 coin_img = pygame.image.load(r"lab8/racer/Coin.png")
@@ -17,28 +17,27 @@ street_img = pygame.image.load(r"lab8/racer/AnimatedStreet.png")
 crash_sound = pygame.mixer.Sound(r"lab8/racer/Lab8_racer_crash.wav")
 background_sound = pygame.mixer.Sound(r"lab8/racer/Lab8_racer_background.wav")
 
-# Изменение размера изображения монеты
+
 coin_img = pygame.transform.scale(coin_img, (30, 30))
 
-# Отображение окна
 screen = pygame.display.set_mode((w, h))
 
-# Воспроизведение фоновой музыки
-background_sound.play(-1)  # Зацикленный звук
+
+background_sound.play(-1)  
 
 font = pygame.font.Font(None, 50)
 
-# Переменные фона
+
 bg_y1 = 0
 bg_y2 = -h
 bg_speed = 5
 
-# Класс игрока
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = player_img
-        self.rect = self.image.get_rect(center=(w // 2, h - 100))  # Начальная позиция внизу по центру
+        self.rect = self.image.get_rect(center=(w // 2, h - 100))  
     
     def update(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
@@ -46,7 +45,7 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_RIGHT] and self.rect.right < w:
             self.rect.x += 5
 
-# Класс врага
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -65,14 +64,14 @@ class Coin(pygame.sprite.Sprite):
         super().__init__()
         self.image = coin_img
         self.rect = self.image.get_rect(midtop=(random.randint(50, w - 50), 0))
-        self.speed = 3  # Скорость монеты
+        self.speed = 3  
     
     def update(self):
         self.rect.y += self.speed
         if self.rect.top > h:
             self.kill()
 
-# Группы игровых объектов
+
 all_sprites = pygame.sprite.Group()
 player = Player()
 enemy = Enemy()
